@@ -14,7 +14,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.activity.Main"
             android:exported="true"
             android:theme="@style/SplashTheme">
             <intent-filter>

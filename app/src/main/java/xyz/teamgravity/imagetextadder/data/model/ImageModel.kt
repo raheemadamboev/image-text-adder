@@ -10,8 +10,8 @@ data class ImageModel(
     val uri: Uri,
     val path: String,
     val name: String,
-    val size: String,
+    val size: Long,
     val width: String?,
     val height: String?,
-    val date: String
+    val date: Long
 ) : Parcelable

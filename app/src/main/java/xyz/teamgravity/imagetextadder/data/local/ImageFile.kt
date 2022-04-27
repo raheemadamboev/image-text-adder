@@ -126,7 +126,6 @@ class ImageFile(
                 MediaStore.Images.Media.RELATIVE_PATH,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media.MIME_TYPE,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
                 MediaStore.Images.Media.DATE_MODIFIED
@@ -145,7 +144,6 @@ class ImageFile(
                     val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.RELATIVE_PATH))
                     val name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
                     val size = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE))
-                    val type = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.MIME_TYPE))
                     val width = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
                     val height = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
                     val date = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED))
@@ -160,10 +158,10 @@ class ImageFile(
                             uri = uri,
                             path = path,
                             name = name,
-                            size = size,
+                            size = size.toLongOrNull() ?: 0,
                             width = width,
                             height = height,
-                            date = date
+                            date = (date.toLongOrNull() ?: 0) * 1_000
                         )
                     )
                 }

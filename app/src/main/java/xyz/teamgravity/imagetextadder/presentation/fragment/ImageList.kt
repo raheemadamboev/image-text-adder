@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import xyz.teamgravity.imagetextadder.databinding.FragmentImageListBinding
 
-class ImageListFragment : Fragment() {
+class ImageList : Fragment() {
 
     private var _binding: FragmentImageListBinding? = null
     private val binding get() = _binding!!

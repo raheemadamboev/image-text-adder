@@ -132,17 +132,6 @@
             android:textSize="15sp"
             tools:text="@string/raheem" />
 
-        <TextView
-            android:id="@+id/location_t"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="start"
-            android:fontFamily="sans-serif"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textSize="15sp"
-            tools:text="@string/raheem" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -13,7 +13,7 @@ import xyz.teamgravity.imagetextadder.data.repository.ImageRepository
 import javax.inject.Inject
 
 @HiltViewModel
-class ImageViewModel @Inject constructor(
+class ImageListViewModel @Inject constructor(
     private val repository: ImageRepository
 ) : ViewModel() {
 

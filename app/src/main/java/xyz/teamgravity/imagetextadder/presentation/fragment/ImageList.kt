@@ -21,7 +21,7 @@ import xyz.teamgravity.imagetextadder.core.extension.navigateSafely
 import xyz.teamgravity.imagetextadder.data.model.ImageModel
 import xyz.teamgravity.imagetextadder.databinding.FragmentImageListBinding
 import xyz.teamgravity.imagetextadder.presentation.adapter.ImageAdapter
-import xyz.teamgravity.imagetextadder.presentation.viewmodel.ImageViewModel
+import xyz.teamgravity.imagetextadder.presentation.viewmodel.ImageListViewModel
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -30,7 +30,7 @@ class ImageList : Fragment(), ImageAdapter.ImageListener {
     private var _binding: FragmentImageListBinding? = null
     private val binding get() = _binding!!
 
-    private val viewmodel by viewModels<ImageViewModel>()
+    private val viewmodel by viewModels<ImageListViewModel>()
 
     @Inject
     lateinit var adapter: ImageAdapter

@@ -3,9 +3,11 @@ package xyz.teamgravity.imagetextadder.presentation.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
+import dagger.hilt.android.AndroidEntryPoint
 import xyz.teamgravity.imagetextadder.R
 import xyz.teamgravity.imagetextadder.databinding.ActivityMainBinding
 
+@AndroidEntryPoint
 class Main : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding

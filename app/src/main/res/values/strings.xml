@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ImageTextAdder</string>
+    <string name="raheem">Raheem</string>
+
+    <!-- Image -->
+    <string name="hint_title">Title goes here</string>
+    <string name="hint_subtitle">And subtitle goes here</string>
+    <string name="image_details">Details</string>
 </resources>

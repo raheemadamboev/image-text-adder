@@ -12,4 +12,8 @@ object Helper {
             else -> Const.JPG
         }
     }
+
+    fun kbFromBytes(bytes: Long): Long {
+        return bytes / 1024
+    }
 }

@@ -117,7 +117,7 @@ class ImageFile(
     ///////////////////////////////////////////////////////////////////////////
 
     @SuppressLint("Range")
-    suspend fun getImages(): Flow<List<ImageModel>> {
+    fun getImages(): Flow<List<ImageModel>> {
         return flow {
             val images = mutableListOf<ImageModel>()
 

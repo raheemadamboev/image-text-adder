@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/imageList">
+
+
+    <fragment
+        android:id="@+id/imageList"
+        android:name="xyz.teamgravity.imagetextadder.presentation.fragment.ImageList"
+        android:label="fragment_image_list"
+        tools:layout="@layout/fragment_image_list">
+        <action
+            android:id="@+id/action_imageList_to_image"
+            app:destination="@id/image"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/image"
+        android:name="xyz.teamgravity.imagetextadder.presentation.fragment.Image"
+        android:label="fragment_image"
+        tools:layout="@layout/fragment_image">
+        <argument
+            android:name="image"
+            app:argType="xyz.teamgravity.imagetextadder.data.model.ImageModel" />
+    </fragment>
+</navigation>

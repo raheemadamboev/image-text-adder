@@ -228,6 +228,11 @@ class Image : Fragment() {
         viewmodel.updateImage(args.image, createBitmap())
     }
 
+    private fun deleteImage() {
+        hideKeyboard()
+        viewmodel.deleteImage(args.image)
+    }
+
     private fun createBitmap(): Bitmap {
         with(binding) {
             val bitmap = getBitmapFromView(imageI)
@@ -288,7 +293,7 @@ class Image : Fragment() {
 
     private fun onDelete() {
         binding.deleteI.setOnClickListener {
-
+            deleteImage()
         }
     }
 
@@ -298,7 +303,8 @@ class Image : Fragment() {
     }
 
     private val deleteScopedPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-
+        if (result.resultCode == Activity.RESULT_OK) deleteImage()
+        else Toast.makeText(requireContext(), getString(R.string.permission_fail), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,5 @@
 package xyz.teamgravity.imagetextadder.data.local
 
-import android.annotation.SuppressLint
 import android.app.RecoverableSecurityException
 import android.content.ContentResolver
 import android.content.ContentUris
@@ -116,7 +115,6 @@ class ImageFile(
     // Get
     ///////////////////////////////////////////////////////////////////////////
 
-    @SuppressLint("Range")
     fun getImages(): Flow<List<ImageModel>> {
         return flow {
             val images = mutableListOf<ImageModel>()
@@ -140,13 +138,13 @@ class ImageFile(
                 sort
             )?.use { cursor ->
                 while (cursor.moveToNext()) {
-                    val id = cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID))
-                    val path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.RELATIVE_PATH))
-                    val name = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME))
-                    val size = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.SIZE))
-                    val width = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.WIDTH))
-                    val height = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.HEIGHT))
-                    val date = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATE_MODIFIED))
+                    val id = cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID))
+                    val path = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH))
+                    val name = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME))
+                    val size = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
+                    val width = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH))
+                    val height = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED))
 
                     val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 

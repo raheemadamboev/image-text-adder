@@ -20,10 +20,6 @@ class ImageListViewModel @Inject constructor(
     private val _state = MutableStateFlow(emptyList<ImageModel>())
     val state: StateFlow<List<ImageModel>> = _state.asStateFlow()
 
-    init {
-        onGetImages()
-    }
-
     fun onGetImages() {
         viewModelScope.launch {
             _state.emit(repository.getImages().first())

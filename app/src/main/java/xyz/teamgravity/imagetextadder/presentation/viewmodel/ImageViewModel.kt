@@ -38,10 +38,19 @@ class ImageViewModel @Inject constructor(
         }
     }
 
+    fun deleteImage(image: ImageModel) {
+        viewModelScope.launch {
+            val sender = repository.deleteImage(image)
+
+            if (sender == null) _event.send(ImageEvent.ImageDeleted)
+            else _event.send(ImageEvent.ScopedPermissionNeeded(sender = sender, request = ImageRequest.DELETE))
+        }
+    }
+
     sealed class ImageEvent {
-        object ImageDeleted : ImageEvent()
         object ImageSaved : ImageEvent()
         object ImageUpdated : ImageEvent()
+        object ImageDeleted : ImageEvent()
         data class ScopedPermissionNeeded(val sender: IntentSender, val request: ImageRequest) : ImageEvent()
     }
 

@@ -80,10 +80,10 @@ class ImageFile(
     // Update
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun updateImage(image: ImageModel, uri: Uri, bitmap: Bitmap): IntentSender? {
+    suspend fun updateImage(image: ImageModel, bitmap: Bitmap): IntentSender? {
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                insertImage(image, uri, bitmap)
+                insertImage(image, image.uri, bitmap)
                 null
                 // successful
             } catch (e: SecurityException) {
@@ -129,9 +129,9 @@ class ImageFile(
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
-                MediaStore.Images.Media.DATE_MODIFIED
+                MediaStore.Images.Media.DATE_ADDED
             )
-            val sort = "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
+            val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
             resolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
@@ -147,7 +147,7 @@ class ImageFile(
                     val size = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
                     val width = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH))
                     val height = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT))
-                    val date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED))
 
                     val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 

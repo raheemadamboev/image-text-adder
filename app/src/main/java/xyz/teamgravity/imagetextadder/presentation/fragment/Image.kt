@@ -77,7 +77,7 @@ class Image : Fragment() {
             }
 
             R.id.save_as_menu -> {
-
+                saveImageAs()
                 true
             }
 
@@ -223,6 +223,11 @@ class Image : Fragment() {
         viewmodel.saveImage(args.image, uri, createBitmap())
     }
 
+    private fun saveImageAs() {
+        hideEditor()
+        saveImageAsLauncher.launch("${System.currentTimeMillis()}.jpeg")
+    }
+
     private fun updateImage() {
         hideEditor()
         viewmodel.updateImage(args.image, createBitmap())
@@ -295,6 +300,10 @@ class Image : Fragment() {
         binding.deleteI.setOnClickListener {
             deleteImage()
         }
+    }
+
+    private val saveImageAsLauncher = registerForActivityResult(ActivityResultContracts.CreateDocument()) { uri ->
+        if (uri != null) saveImage(uri)
     }
 
     private val updateScopedPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->

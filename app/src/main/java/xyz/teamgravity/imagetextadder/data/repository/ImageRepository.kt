@@ -27,8 +27,8 @@ class ImageRepository(
     // Update
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun updateImage(image: ImageModel, uri: Uri, bitmap: Bitmap): IntentSender? {
-        return file.updateImage(image, uri, bitmap)
+    suspend fun updateImage(image: ImageModel, bitmap: Bitmap): IntentSender? {
+        return file.updateImage(image, bitmap)
     }
 
     ///////////////////////////////////////////////////////////////////////////

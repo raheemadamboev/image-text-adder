@@ -11,4 +11,6 @@
     <string name="save_copy">Save copy</string>
     <string name="save">Save</string>
     <string name="save_as">Save as …</string>
+    <string name="permission_fail">You need to grant permission in order to execute this action!</string>
+    <string name="images_changed">Images changed!</string>
 </resources>

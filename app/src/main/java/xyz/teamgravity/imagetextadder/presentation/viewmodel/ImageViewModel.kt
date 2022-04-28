@@ -29,6 +29,15 @@ class ImageViewModel @Inject constructor(
         }
     }
 
+    fun updateImage(image: ImageModel, bitmap: Bitmap) {
+        viewModelScope.launch {
+            val sender = repository.updateImage(image, bitmap)
+
+            if (sender == null) _event.send(ImageEvent.ImageUpdated)
+            else _event.send(ImageEvent.ScopedPermissionNeeded(sender = sender, request = ImageRequest.UPDATE))
+        }
+    }
+
     sealed class ImageEvent {
         object ImageDeleted : ImageEvent()
         object ImageSaved : ImageEvent()

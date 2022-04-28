@@ -7,15 +7,23 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
+import android.text.TextPaint
 import android.view.*
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import xyz.teamgravity.imagetextadder.R
 import xyz.teamgravity.imagetextadder.core.extension.gone
 import xyz.teamgravity.imagetextadder.core.extension.invisible
@@ -48,6 +56,7 @@ class Image : Fragment() {
 
         updateUI()
         button()
+        observe()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -63,7 +72,7 @@ class Image : Fragment() {
             }
 
             R.id.save_menu -> {
-
+                updateImage()
                 true
             }
 
@@ -87,6 +96,14 @@ class Image : Fragment() {
         onDelete()
     }
 
+    private fun observe() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewmodel.event.collectLatest { event ->
+                event(event)
+            }
+        }
+    }
+
     private fun toolbar() {
         setHasOptionsMenu(true)
         val appCompatActivity = activity as AppCompatActivity
@@ -103,6 +120,30 @@ class Image : Fragment() {
                 .signature(ObjectKey(args.image.date))
                 .into(imageI)
         }
+    }
+
+    private fun event(event: ImageViewModel.ImageEvent) {
+        when (event) {
+            ImageViewModel.ImageEvent.ImageSaved,
+            ImageViewModel.ImageEvent.ImageUpdated,
+            ImageViewModel.ImageEvent.ImageDeleted -> handleImageChange()
+
+            is ImageViewModel.ImageEvent.ScopedPermissionNeeded -> {
+                when (event.request) {
+                    ImageViewModel.ImageRequest.UPDATE -> updateScopedPermissionLauncher.launch(
+                        IntentSenderRequest.Builder(event.sender).build()
+                    )
+                    ImageViewModel.ImageRequest.DELETE -> deleteScopedPermissionLauncher.launch(
+                        IntentSenderRequest.Builder(event.sender).build()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun handleImageChange() {
+        Toast.makeText(requireContext(), getString(R.string.images_changed), Toast.LENGTH_SHORT).show()
+        findNavController().navigateUp()
     }
 
     private fun showHideEditor() {
@@ -182,6 +223,11 @@ class Image : Fragment() {
         viewmodel.saveImage(args.image, uri, createBitmap())
     }
 
+    private fun updateImage() {
+        hideEditor()
+        viewmodel.updateImage(args.image, createBitmap())
+    }
+
     private fun createBitmap(): Bitmap {
         with(binding) {
             val bitmap = getBitmapFromView(imageI)
@@ -200,7 +246,7 @@ class Image : Fragment() {
         with(binding) {
             val canvas = Canvas(bitmap)
 
-            val textPaint = titleField.paint.apply {
+            val textPaint = TextPaint(titleField.paint).apply {
                 color = Color.WHITE
                 textAlign = Paint.Align.CENTER
             }
@@ -244,6 +290,15 @@ class Image : Fragment() {
         binding.deleteI.setOnClickListener {
 
         }
+    }
+
+    private val updateScopedPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) updateImage()
+        else Toast.makeText(requireContext(), getString(R.string.permission_fail), Toast.LENGTH_SHORT).show()
+    }
+
+    private val deleteScopedPermissionLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+
     }
 
     override fun onDestroyView() {

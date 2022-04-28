@@ -78,7 +78,7 @@ class Image : Fragment() {
 
     private fun updateUI() {
         toolbar()
-        updateImage()
+        displayImage()
     }
 
     private fun button() {
@@ -96,7 +96,7 @@ class Image : Fragment() {
         appCompatActivity.supportActionBar?.setDisplayShowHomeEnabled(true)
     }
 
-    private fun updateImage() {
+    private fun displayImage() {
         binding.apply {
             Glide.with(requireContext())
                 .load(args.image.uri)

@@ -129,7 +129,7 @@ class ImageFile(
                 MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
-                MediaStore.Images.Media.DATE_ADDED
+                MediaStore.Images.Media.DATE_MODIFIED
             )
             val sort = "${MediaStore.Images.Media.DATE_ADDED} DESC"
 
@@ -147,7 +147,7 @@ class ImageFile(
                     val size = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE))
                     val width = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH))
                     val height = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.HEIGHT))
-                    val date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED))
+                    val date = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_MODIFIED))
 
                     val uri = ContentUris.withAppendedId(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, id)
 

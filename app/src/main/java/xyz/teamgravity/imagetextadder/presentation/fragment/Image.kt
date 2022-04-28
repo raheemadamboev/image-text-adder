@@ -91,6 +91,7 @@ class Image : Fragment() {
     }
 
     private fun button() {
+        onBack()
         onEdit()
         onInfo()
         onDelete()
@@ -281,6 +282,13 @@ class Image : Fragment() {
 
             canvas.drawText(subtitle, xPos, yPos, outlinePaint)
             canvas.drawText(subtitle, xPos, yPos, textPaint)
+        }
+    }
+
+    private fun onBack() {
+        binding.toolbar.setNavigationOnClickListener {
+            hideKeyboard()
+            findNavController().navigateUp()
         }
     }
 

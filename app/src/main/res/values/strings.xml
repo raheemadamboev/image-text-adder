@@ -8,4 +8,7 @@
     <string name="image_details">Details</string>
     <string name="your_kb">%1$d kb</string>
     <string name="your_dimension">%1$s x %2$s</string>
+    <string name="save_copy">Save copy</string>
+    <string name="save">Save</string>
+    <string name="save_as">Save as …</string>
 </resources>

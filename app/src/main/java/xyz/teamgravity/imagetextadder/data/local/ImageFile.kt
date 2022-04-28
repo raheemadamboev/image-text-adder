@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
-import xyz.teamgravity.imagetextadder.core.util.Helper
+import xyz.teamgravity.imagetextadder.core.constant.Const
 import xyz.teamgravity.imagetextadder.data.model.ImageModel
 import java.io.File
 
@@ -32,22 +32,25 @@ class ImageFile(
     // Insert
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun insertImage(uri: Uri, bitmap: Bitmap, format: Bitmap.CompressFormat) {
+    suspend fun insertImage(image: ImageModel, uri: Uri, bitmap: Bitmap) {
         withContext(Dispatchers.IO) {
+            val format = getFormat(image.uri)
+
             resolver.openOutputStream(uri, "w").use { stream ->
                 bitmap.compress(format, QUALITY, stream)
             }
         }
     }
 
-    suspend fun insertImage(bitmap: Bitmap, format: Bitmap.CompressFormat) {
+    suspend fun insertImage(image: ImageModel, bitmap: Bitmap) {
         withContext(Dispatchers.IO) {
+            val format = getFormat(image.uri)
             val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
             val dir = File(Environment.DIRECTORY_PICTURES, DIRECTORY_FOLDER)
             val date = System.currentTimeMillis()
-            val extension = Helper.getImageExtension(format)
+            val extension = getImageExtension(format)
 
-            val image = contentValuesOf(
+            val newImage = contentValuesOf(
                 MediaStore.Images.Media.DISPLAY_NAME to "$date.$extension",
                 MediaStore.Images.Media.MIME_TYPE to "image/$extension",
                 MediaStore.Images.Media.DATE_ADDED to date,
@@ -59,15 +62,15 @@ class ImageFile(
                 MediaStore.Images.Media.IS_PENDING to 1
             )
 
-            val uri = resolver.insert(collection, image)
+            val uri = resolver.insert(collection, newImage)
 
             resolver.openOutputStream(uri!!, "w").use { stream ->
                 bitmap.compress(format, QUALITY, stream)
             }
 
-            image.clear()
-            image.put(MediaStore.Images.Media.IS_PENDING, 0)
-            resolver.update(uri, image, null, null)
+            newImage.clear()
+            newImage.put(MediaStore.Images.Media.IS_PENDING, 0)
+            resolver.update(uri, newImage, null, null)
 
             Unit
         }
@@ -77,10 +80,10 @@ class ImageFile(
     // Update
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun updateImage(uri: Uri, bitmap: Bitmap, format: Bitmap.CompressFormat): IntentSender? {
+    suspend fun updateImage(image: ImageModel, uri: Uri, bitmap: Bitmap): IntentSender? {
         return withContext(Dispatchers.IO) {
             return@withContext try {
-                insertImage(uri, bitmap, format)
+                insertImage(image, uri, bitmap)
                 null
                 // successful
             } catch (e: SecurityException) {
@@ -167,5 +170,31 @@ class ImageFile(
 
             emit(images)
         }.flowOn(Dispatchers.IO)
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Utils
+    ///////////////////////////////////////////////////////////////////////////
+
+    private fun getFormat(uri: Uri): Bitmap.CompressFormat {
+        val type = resolver.getType(uri)
+        return getImageFormat(type)
+    }
+
+    private fun getImageFormat(type: String?): Bitmap.CompressFormat {
+        return when (type) {
+            Bitmap.CompressFormat.PNG.name -> Bitmap.CompressFormat.PNG
+            Bitmap.CompressFormat.JPEG.name -> Bitmap.CompressFormat.JPEG
+            Bitmap.CompressFormat.WEBP.name -> Bitmap.CompressFormat.WEBP
+            else -> Bitmap.CompressFormat.JPEG
+        }
+    }
+
+    private fun getImageExtension(format: Bitmap.CompressFormat): String {
+        return when (format) {
+            Bitmap.CompressFormat.PNG -> Const.PNG
+            Bitmap.CompressFormat.JPEG -> Const.JPG
+            else -> Const.JPG
+        }
     }
 }

@@ -1,10 +1,13 @@
 package xyz.teamgravity.imagetextadder.presentation.fragment
 
 import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -47,6 +50,32 @@ class Image : Fragment() {
         button()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_image, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.save_copy_menu -> {
+                saveImage()
+                true
+            }
+
+            R.id.save_menu -> {
+
+                true
+            }
+
+            R.id.save_as_menu -> {
+
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
     private fun updateUI() {
         toolbar()
         updateImage()
@@ -59,6 +88,7 @@ class Image : Fragment() {
     }
 
     private fun toolbar() {
+        setHasOptionsMenu(true)
         val appCompatActivity = activity as AppCompatActivity
         appCompatActivity.setSupportActionBar(binding.toolbar)
         appCompatActivity.supportActionBar?.title = ""
@@ -145,6 +175,57 @@ class Image : Fragment() {
     private fun hideKeyboard() {
         val imm = activity?.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+    }
+
+    private fun saveImage(uri: Uri? = null) {
+        hideEditor()
+        viewmodel.saveImage(args.image, uri, createBitmap())
+    }
+
+    private fun createBitmap(): Bitmap {
+        with(binding) {
+            val bitmap = getBitmapFromView(imageI)
+            addTextToBitmap(bitmap, titleField.text.toString(), subtitleField.text.toString())
+            return bitmap
+        }
+    }
+
+    private fun getBitmapFromView(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        view.draw(Canvas(bitmap))
+        return bitmap
+    }
+
+    private fun addTextToBitmap(bitmap: Bitmap, title: String, subtitle: String) {
+        with(binding) {
+            val canvas = Canvas(bitmap)
+
+            val textPaint = titleField.paint.apply {
+                color = Color.WHITE
+                textAlign = Paint.Align.CENTER
+            }
+
+            val outlinePaint = Paint().apply {
+                isAntiAlias = true
+                textSize = titleField.textSize
+                color = Color.BLACK
+                typeface = titleField.typeface
+                style = Paint.Style.STROKE
+                textAlign = Paint.Align.CENTER
+                strokeWidth = 10F
+            }
+
+            val xPos = bitmap.width / 2F
+            var yPos = titleField.pivotY + titleField.height
+
+            canvas.drawText(title, xPos, yPos, outlinePaint)
+            canvas.drawText(title, xPos, yPos, textPaint)
+
+            yPos = imageI.height.toFloat() - subtitleField.height
+
+            canvas.drawText(subtitle, xPos, yPos, outlinePaint)
+            canvas.drawText(subtitle, xPos, yPos, textPaint)
+        }
     }
 
     private fun onEdit() {

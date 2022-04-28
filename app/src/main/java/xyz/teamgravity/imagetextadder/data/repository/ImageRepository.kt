@@ -15,20 +15,20 @@ class ImageRepository(
     // Insert
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun insertImage(uri: Uri, bitmap: Bitmap, format: Bitmap.CompressFormat) {
-        file.insertImage(uri, bitmap, format)
+    suspend fun insertImage(image: ImageModel, uri: Uri, bitmap: Bitmap) {
+        file.insertImage(image, uri, bitmap)
     }
 
-    suspend fun insertImage(bitmap: Bitmap, format: Bitmap.CompressFormat) {
-        file.insertImage(bitmap, format)
+    suspend fun insertImage(image: ImageModel, bitmap: Bitmap) {
+        file.insertImage(image, bitmap)
     }
 
     ///////////////////////////////////////////////////////////////////////////
     // Update
     ///////////////////////////////////////////////////////////////////////////
 
-    suspend fun updateImage(uri: Uri, bitmap: Bitmap, format: Bitmap.CompressFormat): IntentSender? {
-        return file.updateImage(uri, bitmap, format)
+    suspend fun updateImage(image: ImageModel, uri: Uri, bitmap: Bitmap): IntentSender? {
+        return file.updateImage(image, uri, bitmap)
     }
 
     ///////////////////////////////////////////////////////////////////////////
